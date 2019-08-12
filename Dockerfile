@@ -39,12 +39,10 @@ USER heroku
 
 ADD . $APP_HOME 
 
-ADD ./.profile.d /app/.profile.d
-
 # Run the app.  CMD is required to run on Heroku
 # $PORT is set by Heroku			
 ADD ./.profile.d /app/.profile.d
-CMD bash heroku-exec.sh && gunicorn --bind 0.0.0.0:$PORT wsgi
+#CMD gunicorn --bind 0.0.0.0:$PORT wsgi
 
 #If app is in private space uncomment line 45 and comment line 42
-#CMD gunicorn --bind 0.0.0.0:$PORT wsgi && bash /app/.profile.d/heroku-exec.sh
+CMD gunicorn --bind 0.0.0.0:$PORT wsgi && bash /app/.profile.d/heroku-exec.sh
