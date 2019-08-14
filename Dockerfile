@@ -13,4 +13,4 @@ ADD ./.profile.d /app/.profile.d
 # override the default entrypoint in this image, which is: ["/bin/sh", "-c", "java $JAVA_OPTS -jar /usr/bin/alfresco-docker-imagemagick.jar"]
 ENTRYPOINT []
 USER heroku
-CMD source </app/.profile.d/heroku-exec.sh && java $JAVA_OPTS -jar /usr/bin/alfresco-docker-imagemagick.jar
+CMD source /app/.profile.d/heroku-exec.sh && java $JAVA_OPTS -jar /usr/bin/alfresco-docker-imagemagick.jar
