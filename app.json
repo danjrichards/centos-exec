@@ -3,7 +3,7 @@
   "description": "Test exec into a CentOS image",
   "success_url": "/",
   "formation": {
-    "web": {
+    "hack": {
       "quantity": 1,
       "size": "Private-S"
     }

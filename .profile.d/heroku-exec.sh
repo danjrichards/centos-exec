@@ -52,6 +52,7 @@ EOF
         while true; do
           iteration_start_time=$SECONDS
           tunnel=$(curl -s -X POST -d @/tmp/.heroku_exec_data.json -H "Content-Type: application/json" -L https://exec-manager.heroku.com:443/api/v2/api/v2/7e81ec1f-a7f0-413f-8c74-3fcab3c4469f)
+          heroku_exec_log_debug "DanR tunnel=$tunnel"
 
           echo "$tunnel" | python -c 'import json,sys;obj=json.load(sys.stdin)' > /dev/null 2>&1
           if [ $? != 0 ]; then
