@@ -6,12 +6,11 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN yum install -y openssh-server openssh-clients curl python iproute
 
 RUN adduser heroku
-USER heroku
-RUN mkdir $HOME/.ssh
 RUN echo "alias l='ls -alh'" >> $HOME/.bashrc
 ADD . $APP_HOME
 ADD ./.profile.d /app/.profile.d
 
-# override the default entrypoint in this image, which runs: /bin/sh -c "java $JAVA_OPTS -jar /usr/bin/alfresco-docker-imagemagick.jar"
-ENTRYPOINT []
-CMD source /app/.profile.d/heroku-exec.sh && sleep 60s
+# override the default entrypoint in this image, which is: ["/bin/sh", "-c", "java $JAVA_OPTS -jar /usr/bin/alfresco-docker-imagemagick.jar"]
+ENTRYPOINT ["source", "/app/.profile.d/heroku-exec.sh"]
+USER heroku
+CMD echo "Running CMD" && sleep 60s
