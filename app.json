@@ -1,0 +1,12 @@
+{
+  "name": "CentOS Heroku exec PoC",
+  "description": "Test exec into a CentOS image",
+  "success_url": "/",
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "Private-S"
+    }
+  },
+  "stack": "container"
+}

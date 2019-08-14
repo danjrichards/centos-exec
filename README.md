@@ -33,26 +33,17 @@ https://rocky-everglades-56640.herokuapp.com/ | https://git.heroku.com/rocky-eve
 
 ```
 heroku ps:scale web=1
-
-Scaling dynos... done, now running web at 1:Standard-1X
 ```
 
 # Check Dynos are up
 
 ```
 heroku ps -a <APP_NAME>
-
-=== web (Standard-1X): /bin/sh -c gunicorn\ --bind\ 0.0.0.0:\$PORT\ wsgi\ \&\&\ bash\ /app/.profile.d/heroku-exec.sh (3)
-web.1: up 2019/01/13 00:48:24 +0530 (~ 12m ago)
 ```
 # SSH into Dyno
 
 ```
-heroku ps:exec --dyno=web.1 -a <APP_NAME>
-
-Establishing credentials... done
-Connecting to web.1 on ⬢ exec-docker... 
-~ $ 
+heroku ps:exec --dyno=web.1 -a <APP_NAME> 
 ```
 
 

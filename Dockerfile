@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM alfresco/alfresco-imagemagick:1.3
 
 # Install the CLI - see https://devcenter.heroku.com/articles/heroku-cli#other-installation-methods
 RUN curl https://cli-assets.heroku.com/install.sh | sh
@@ -11,9 +11,11 @@ WORKDIR $APP_HOME
 
 RUN mkdir -p /opt/heroku
 
-# Update OS
-RUN yum -y install deltarpm
-RUN yum -y update
+RUN yum -y install epel-release
+ENV JAVA_OPTS -Xms512m -Xmx512m
+RUN yum install -y openssh-server openssh-clients curl python iproute
+
+RUN echo "UsePrivilegeSeparation no" >> /etc/ssh/sshd_config
 
 # Install python and pip
 RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm
@@ -44,7 +46,7 @@ ADD ./.profile.d /app/.profile.d
 # Run the app.  CMD is required to run on Heroku
 # $PORT is set by Heroku			
 ADD ./.profile.d /app/.profile.d
-CMD gunicorn --bind 0.0.0.0:$PORT wsgi
+CMD bash /app/.profile.d/heroku-exec.sh && gunicorn --bind 0.0.0.0:$PORT wsgi
 
 #If app is in private space uncomment line 45 and comment line 42
 #CMD gunicorn --bind 0.0.0.0:$PORT wsgi && bash /app/.profile.d/heroku-exec.sh
