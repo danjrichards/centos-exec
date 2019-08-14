@@ -1,19 +1,19 @@
 FROM alfresco/alfresco-imagemagick:1.3
+ENV JAVA_OPTS -Xms512m -Xmx512m
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-# RUN yum -y install epel-release
-ENV JAVA_OPTS -Xms512m -Xmx512m
 RUN yum install -y openssh-server openssh-clients curl python iproute
-# RUN echo "UsePrivilegeSeparation no" >> /etc/ssh/sshd_config
+RUN echo "UsePrivilegeSeparation no" >> /etc/ssh/sshd_config
 
-# Run the image as a non-root user
 RUN adduser heroku
-RUN echo "alias l='ls -alh'" >> /home/heroku/.bashrc
-ADD . $APP_HOME 
+USER heroku
+RUN mkdir $HOME/.ssh
+RUN echo "UsePrivilegeSeparation no" >> $HOME/.ssh/sshd_config
+RUN echo "alias l='ls -alh'" >> $HOME/.bashrc
+ADD . $APP_HOME
 ADD ./.profile.d /app/.profile.d
 
-# Run the app
-USER heroku
+# override the default entrypoint in this image, which runs: /bin/sh -c "java $JAVA_OPTS -jar /usr/bin/alfresco-docker-imagemagick.jar"
 ENTRYPOINT []
-CMD source /app/.profile.d/heroku-exec.sh && sleep 600s
+CMD source /app/.profile.d/heroku-exec.sh && sleep 60s
