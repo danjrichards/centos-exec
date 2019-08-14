@@ -33,11 +33,8 @@ AuthorizedKeysFile $HOME/.ssh/authorized_keys
 Subsystem sftp /usr/lib/openssh/sftp-server
 ClientAliveInterval 30
 ClientAliveCountMax 3
+UsePrivilegeSeparation no
 EOF
-
-  if ssh -V 2>&1 | grep -q -e '^OpenSSH_7\.2.*$' -e '^OpenSSH_6\.6.*$'; then
-    echo "UsePrivilegeSeparation no" >> $HOME/.ssh/sshd_config
-  fi
 
   if [ -z "$(ps -C sshd -o pid=)" ]; then
     heroku_exec_log_debug "Starting sshd on localhost:${localPort}..."
