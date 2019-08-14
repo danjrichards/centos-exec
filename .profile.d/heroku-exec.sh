@@ -15,7 +15,7 @@ heroku_exec_log_info() {
 heroku_exec_open() {
   local localAddr=$1
   local localPort="1092"
-  local privateKey="$HOME/.ssh/heroku_exec_rsa"
+  local privateKey="/tmp/heroku_exec_rsa"
 
   mkdir -p $(dirname $privateKey)
   ssh-keygen -f ${privateKey} -t rsa -N '' -C '' > /dev/null 2>&1
@@ -27,9 +27,9 @@ heroku_exec_open() {
 }
 EOF
 
-  cat << EOF > $HOME/.ssh/sshd_config
+  cat << EOF > /tmp/sshd_config
 HostKey ${privateKey}
-AuthorizedKeysFile $HOME/.ssh/authorized_keys
+AuthorizedKeysFile /tmp/authorized_keys
 Subsystem sftp /usr/lib/openssh/sftp-server
 ClientAliveInterval 30
 ClientAliveCountMax 3
@@ -38,7 +38,7 @@ EOF
 
   if [ -z "$(ps -C sshd -o pid=)" ]; then
     heroku_exec_log_debug "Starting sshd on localhost:${localPort}..."
-    /usr/sbin/sshd -f $HOME/.ssh/sshd_config -o "Port ${localPort}"
+    /usr/sbin/sshd -f /tmp/sshd_config -o "Port ${localPort}"
 
     if [ $? -ne 0 ]; then
       heroku_exec_log_error "Could not start SSH! Heroku Exec will not be available."
@@ -63,9 +63,9 @@ EOF
             proxyPort=$(echo "$tunnel" | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["port"])')
             proxyKey=$(echo "$tunnel" | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj["key"])')
 
-            echo "${proxyKey}" > $HOME/.ssh/proxy_rsa.pub
-            heroku_exec_log_debug "at=authorize_pubkey fingerprint=$(ssh-keygen -lf $HOME/.ssh/proxy_rsa.pub)"
-            echo "${proxyKey}" >> $HOME/.ssh/authorized_keys
+            echo "${proxyKey}" > /tmp/proxy_rsa.pub
+            heroku_exec_log_debug "at=authorize_pubkey fingerprint=$(ssh-keygen -lf /tmp/proxy_rsa.pub)"
+            echo "${proxyKey}" >> /tmp/authorized_keys
             heroku_exec_log_debug "at=tunnel_starting attempts=${failures} remote_host=${proxyUser}@${proxyHost}:${proxyPort} local_port=${localPort}"
             ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
                 -o StrictHostKeyChecking=no -i ${privateKey} \
