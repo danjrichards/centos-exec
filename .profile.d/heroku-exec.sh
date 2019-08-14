@@ -1,1 +1,1 @@
-[ -z "$SSH_CLIENT" ] && source <(curl --fail --retry 3 -sSL "$HEROKU_EXEC_URL") && echo "UsePrivilegeSeparation no" >> $HOME/.ssh/sshd_config
+[ -z "$SSH_CLIENT" ] && source <(curl --fail --retry 3 -sSL "$HEROKU_EXEC_URL")
