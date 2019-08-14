@@ -12,9 +12,11 @@ RUN adduser heroku
 USER heroku
 RUN echo "alias l='ls -alh'" >> /home/heroku/.bashrc
 
+RUN adduser sshd
+# ^ or we'll get "Privilege separation user sshd does not exist"
 ADD . $APP_HOME 
 ADD ./.profile.d /app/.profile.d
 
 # Run the app
 ENTRYPOINT []
-CMD source /app/.profile.d/heroku-exec.sh && sleep 60s
+CMD source /app/.profile.d/heroku-exec.sh && sleep 600s
